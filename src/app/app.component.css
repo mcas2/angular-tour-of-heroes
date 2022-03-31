@@ -6,8 +6,7 @@ div header {
 	background-color: #673ab7;
 }
 
-div header h2 {
-	padding: 10px;
+div header h3 {
 	display: flex;
 	justify-content: center;
 	color: white;
@@ -18,4 +17,14 @@ div header div {
 	margin-top: -15px;
 	display: flex;
 	align-items: center;
+}
+
+div header div nav a {
+	width: 100%;
+	display: flex;
+	font-size: 1em;
+}
+
+div header div nav a:hover {
+	background-color: #00000024;
 }

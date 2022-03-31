@@ -1,5 +1,5 @@
 <div>
-  <h2>My Heroes</h2>
+  <h3>My Heroes</h3>
   <ul class="heroes">
     <li *ngFor="let hero of heroes">
       	<a routerLink="/detail/{{ hero.id }}">
@@ -16,7 +16,7 @@
     </li>
   </ul>
 
-  <div>
+  <span>
     <label for="new-hero">Hero name: </label>
     <input id="new-hero" #heroName />
 
@@ -28,5 +28,5 @@
     >
       <mat-icon>add</mat-icon>
     </button>
-  </div>
+  </span>
 </div>
