@@ -21,6 +21,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';  
 import {MatTabsModule} from '@angular/material/tabs'; 
+import {MatInputModule} from '@angular/material/input'; 
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import {MatTabsModule} from '@angular/material/tabs';
     MatButtonModule,
     MatIconModule,
     MatTabsModule,
+    MatInputModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
