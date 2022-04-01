@@ -2,20 +2,21 @@
   <header>
     <h3>{{ title }}</h3>
     <div>
+      <!-- Antiguo modelo, funcional pero escasamente personalizable.
       <nav mat-tab-nav-bar>
           <a mat-tab-link routerLink="/dashboard">Dashboard</a>
           <a mat-tab-link routerLink="/heroes">Heroes</a>      
       </nav>
+       -->
 
-
-      <!-- <mat-tab-group animationDuration="2000ms">
-        <mat-tab label="Dashboard" routerLink="/dashboard"> 
-        </mat-tab>
-        
-        <mat-tab label="Second">
-          <router-outlet></router-outlet>
-        </mat-tab>
-      </mat-tab-group> -->
+      <nav mat-tab-nav-bar [backgroundColor]="background" [tabPanel]="tabPanel" animationDuration="100ms">
+        <a mat-tab-link *ngFor="let link of links"
+           (click)="activeLink = link"
+           [active]="activeLink == link"
+           [routerLink]="link"
+           > {{link | uppercase}} </a>
+      </nav>
+      <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
       
     </div>
   </header>
