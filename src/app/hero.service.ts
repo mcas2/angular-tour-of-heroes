@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Hero } from './hero';
 import { HEROES } from './mock-heroes';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { HeroesComponent } from './heroes/heroes.component';
-import { MessageService } from './message.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
+import { MessageService } from './message.service';
+import { ResourcesService } from "./resources.service";
+
 
 @Injectable({
 	providedIn: 'root'
@@ -15,18 +17,24 @@ export class HeroService {
 
 	private heroesUrl = 'api/heroes'; //Url to web api
 
+	private heroeSubject = new Subject();
+
+	public heroeObservable = new Observable(this.heroeSubject.asObservable());
+
 	httpOptions = { //Esto no lo entiendo
 		headers: new HttpHeaders({ 'Content type' : 'application/json' })
 	};
 
 	constructor(
 		private http: HttpClient,
-		private messageService: MessageService) { }
-
-	private log (mesagge: string){
-		this.messageService.add(`HeroService: ${mesagge}`)
+		private messageService: MessageService,
+		private resourcesService: ResourcesService,
+		) { }
+	
+	getList(){
+		this.heroeSubject.next(this.resourcesService.getList().subscribe());
 	}
-		
+	
 	getHeroes(): Observable<Hero[]> {
 		return this.http.get<Hero[]>(this.heroesUrl)
 		.pipe(
@@ -45,19 +53,7 @@ export class HeroService {
 		//Coge un sólo héroe, no un array, y construye una url con la ip del héroe seleccionado
 	  }
 
-	private handleError<T>(operation = 'operation', result? :T){
-		return (error:any) : Observable<T> => {
-			   // TODO: send the error to remote logging infrastructure
-			   console.error(error); // log to console instead
-
-			   // TODO: better job of transforming error for user consumption
-			   this.log(`${operation} failed: ${error.message}`);
-		   
-			   // Let the app keep running by returning an empty result.
-			   return of(result as T);
-		}
-	}
-
+	
 	updateHero(hero : Hero): Observable<any>{
 		return this.http.put(this.heroesUrl, hero, this.httpOptions).pipe(
 			tap(_ => this.log(`updated hero id=${hero.id}`)),
@@ -92,4 +88,22 @@ export class HeroService {
 			catchError(this.handleError<Hero[]>('searchHeroes', []))
 		);
 	}
+
+	private handleError<T>(operation = 'operation', result? :T){
+		return (error:any) : Observable<T> => {
+			   // TODO: send the error to remote logging infrastructure
+			   console.error(error); // log to console instead
+
+			   // TODO: better job of transforming error for user consumption
+			   this.log(`${operation} failed: ${error.message}`);
+		   
+			   // Let the app keep running by returning an empty result.
+			   return of(result as T);
+		}
+	}
+
+	private log (mesagge: string){
+		this.messageService.add(`HeroService: ${mesagge}`)
+	}
+
 }
