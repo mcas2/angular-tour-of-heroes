@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { filter } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
 import { MessageService } from '../message.service';
@@ -44,13 +44,15 @@ export class HeroesComponent implements OnInit {
 	Lo normal es crear un subject, darle valor, y crear un observable que atienda a sus cambios.
 	A un subject también te puedes suscribir, pero no es necesario para hacerle un next. Lo suyo es crear un
 	observable con el que suscribirse al subject y que el servicio sea el que cambie el subject. 
+	
+	Cuando quieres crear un dato que quieres que sea observable creas un behaviour subject/subject, normalmente privado,
+	y creas un observable público llamando al subject.asObservable(), para suscribirte a él. 
+
+	No es lo mismo un filter de un array que de un observable. 
 	*/
 
 	getHeroes(): void {
 	  this.heroService.getHeroes()
-	  .pipe(
-		filter(hero => (n => n.name!=="M"));
-		)
 	  .subscribe(heroes => this.heroes = heroes);
 	}
 	
