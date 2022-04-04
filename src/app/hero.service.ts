@@ -19,7 +19,7 @@ export class HeroService {
 
 	private heroeSubject = new Subject();
 
-	public heroeObservable = new Observable(this.heroeSubject.asObservable());
+	public heroeObservable = this.heroeSubject.asObservable();
 
 	httpOptions = { //Esto no lo entiendo
 		headers: new HttpHeaders({ 'Content type' : 'application/json' })
@@ -36,12 +36,7 @@ export class HeroService {
 	}
 	
 	getHeroes(): Observable<Hero[]> {
-		return this.http.get<Hero[]>(this.heroesUrl)
-		.pipe(
-				tap(_ => this.log('fetched heroes')),
-				catchError(this.handleError<Hero[]>('getHeroes', []))
-			)	
-		//Pilla un array de Heroes del servidor con la ruta que instanciamos arriba
+		return this.heroeObservable;
 	}
 
 	getHero(id: number): Observable<Hero> {
