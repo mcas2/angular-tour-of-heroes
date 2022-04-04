@@ -6,10 +6,11 @@ import { ThemePalette } from '@angular/material/core';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent {
   title = 'Tour of Heroes';
   links = ['heroes', 'dashboard'];
-  activeLink = this.links[0];
+  activeLink = this.links[1];
   
   background: ThemePalette = 'primary';
 
