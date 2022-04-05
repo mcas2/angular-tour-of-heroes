@@ -19,11 +19,11 @@ export class ResourcesService {
 
     
   getList(): Observable<Hero[]> {
-		return this.http.get<Hero[]>(this.heroesUrl)
+		return this.http.get<Hero[]>(this.heroesUrl) //Recibes la información y se completa
 		.pipe(
 				tap(_ => this.log('fetched heroes')),
 				catchError(this.handleError<Hero[]>('getHeroes', []))
-			)	
+			)
 	}
 
   private log (mesagge: string){

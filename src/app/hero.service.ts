@@ -17,11 +17,14 @@ export class HeroService {
 
 	private heroesUrl = 'api/heroes'; //Url to web api
 
-	private heroeSubject = new Subject();
+	private heroeSubject: Subject<Hero[]> = new Subject<Hero[]>();
 
-	public heroeObservable = this.heroeSubject.asObservable();
+	public heroeObservable: Observable<Hero[]> = this.heroeSubject.asObservable();
+	//Inicializado -> existe, pero para ver sus datos necesitamos una/*  */ suscripción
 
-	httpOptions = { //Esto no lo entiendo
+	private heroes: Hero[] = this.heroeSubject.subscribe(h => this.heroes = h);
+
+	httpOptions = {
 		headers: new HttpHeaders({ 'Content type' : 'application/json' })
 	};
 
@@ -31,12 +34,12 @@ export class HeroService {
 		private resourcesService: ResourcesService,
 		) { }
 	
-	getList(){
-		this.heroeSubject.next(this.resourcesService.getList().subscribe());
-	}
-	
-	getHeroes(): Observable<Hero[]> {
-		return this.heroeObservable;
+	refreshList() {
+		this.resourcesService.getList().subscribe(
+			{
+				next: heroArray => this.heroeSubject.next(heroArray)
+			}
+		)
 	}
 
 	getHero(id: number): Observable<Hero> {
@@ -45,16 +48,24 @@ export class HeroService {
 			tap(_ => this.log(`fetched hero id=${id}`)),
 			catchError(this.handleError<Hero>(`getHero id=${id}`))
 		);
-		//Coge un sólo héroe, no un array, y construye una url con la ip del héroe seleccionado
 	  }
 
 	
-	updateHero(hero : Hero): Observable<any>{
-		return this.http.put(this.heroesUrl, hero, this.httpOptions).pipe(
-			tap(_ => this.log(`updated hero id=${hero.id}`)),
-			catchError(this.handleError<any>('updateHero'))
-		);
+	updateHero(hero: Hero) {
+		this.resourcesService.getList().subscribe(
+			{
+				next: h => this.heroeSubject.next(
+					this.heroes = 
+			}
+		)
 	}
+
+	// updateHero(hero : Hero): Observable<any>{
+	// 	return this.http.put(this.heroesUrl, hero, this.httpOptions).pipe(
+	// 		tap(_ => this.log(`updated hero id=${hero.id}`)),
+	// 		catchError(this.handleError<any>('updateHero'))
+	// 	);
+	// }
 
 	addHero(hero: Hero): Observable<Hero> {
 		return this.http.post<Hero>(this.heroesUrl, hero, this.httpOptions).pipe(

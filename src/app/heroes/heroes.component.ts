@@ -16,9 +16,17 @@ export class HeroesComponent implements OnInit {
   
 	constructor(private heroService: HeroService) { }
   
-	ngOnInit(): void {
-	  this.getHeroes();
+	ngOnInit(): void { 
+	//debería llamar a refreshList y suscribirse al observable 
+		this.heroService.refreshList();
+		this.heroService.heroeObservable.subscribe(
+			{
+				next: heroeArray => this.heroes = heroeArray
+			}
+		)
 	}
+
+
   
 	//El primer parámetro de una función => es el valor de la suscripción, esto es, lo que tenga dentro el observable.
 
@@ -49,13 +57,7 @@ export class HeroesComponent implements OnInit {
 	y creas un observable público llamando al subject.asObservable(), para suscribirte a él. 
 
 	No es lo mismo un filter de un array que de un observable. 
-	*/
-
-	getHeroes(): void {
-	  this.heroService.getHeroes()
-	  .subscribe(heroes => this.heroes = heroes);
-	}
-	
+	*/	
 	
 	//Función cutre porque no entiendo esto =>
 	noMHeroes(name: string){
