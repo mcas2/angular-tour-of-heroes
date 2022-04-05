@@ -2,13 +2,6 @@
   <header>
     <h3>{{ title }}</h3>
     <div>
-      <!-- Antiguo modelo, funcional pero escasamente personalizable.
-      <nav mat-tab-nav-bar>
-          <a mat-tab-link routerLink="/dashboard">Dashboard</a>
-          <a mat-tab-link routerLink="/heroes">Heroes</a>      
-      </nav>
-       -->
-
       <nav mat-tab-nav-bar [backgroundColor]="background" [tabPanel]="tabPanel" animationDuration="100ms">
         <a mat-tab-link *ngFor="let link of links"
            (click)="activeLink = link"

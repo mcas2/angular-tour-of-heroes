@@ -58,15 +58,7 @@ export class HeroesComponent implements OnInit {
 
 	No es lo mismo un filter de un array que de un observable. 
 	*/	
-	
-	//Función cutre porque no entiendo esto =>
-	noMHeroes(name: string){
-		if (name.charAt(0)=="M"){
-			return name;
-		} else{
-			return;
-		}
-	}
+
 
 	add(name: string): void{
 		name = name.trim();

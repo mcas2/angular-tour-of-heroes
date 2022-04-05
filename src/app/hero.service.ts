@@ -7,6 +7,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { MessageService } from './message.service';
 import { ResourcesService } from "./resources.service";
+import { splitAtColon } from '@angular/compiler/src/util';
 
 
 @Injectable({
@@ -22,7 +23,6 @@ export class HeroService {
 	public heroeObservable: Observable<Hero[]> = this.heroeSubject.asObservable();
 	//Inicializado -> existe, pero para ver sus datos necesitamos una/*  */ suscripción
 
-	private heroes: Hero[] = this.heroeSubject.subscribe(h => this.heroes = h);
 
 	httpOptions = {
 		headers: new HttpHeaders({ 'Content type' : 'application/json' })
@@ -51,13 +51,8 @@ export class HeroService {
 	  }
 
 	
-	updateHero(hero: Hero) {
-		this.resourcesService.getList().subscribe(
-			{
-				next: h => this.heroeSubject.next(
-					this.heroes = 
-			}
-		)
+	updateHero(hero: Hero): Observable<Hero[]> {
+		return this.heroeObservable;
 	}
 
 	// updateHero(hero : Hero): Observable<any>{
@@ -88,7 +83,7 @@ export class HeroService {
 			return of([]); // Lo que quiere decir que si no existe el término, devuelve un array vacío
 		}
 		return this.http.get<Hero[]>(`${this.heroesUrl}/?name=${term}`).pipe(
-			tap(x => x.length ?
+			tap(x => x.length ?	
 				this.log(`found heroes matching "${term}`) :
 				this.log(`no heroes matching ${term}`)),
 			catchError(this.handleError<Hero[]>('searchHeroes', []))

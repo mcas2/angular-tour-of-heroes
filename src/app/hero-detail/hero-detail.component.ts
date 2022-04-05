@@ -21,7 +21,9 @@ export class HeroDetailComponent implements OnInit {
 	  ) {}
 	  
 	  ngOnInit(): void {
+		this.heroService.refreshList();
 		this.getHero();
+		this.heroService.heroeObservable.subscribe();
 	  }
 	  
 	  getHero(): void {
@@ -37,8 +39,8 @@ export class HeroDetailComponent implements OnInit {
 	  save(): void {
 		  if (this.hero){
 			  this.heroService.updateHero(this.hero)
-			  .subscribe(()=>this.goBack()); //Esto no lo entiendo
+			  .subscribe(()=>this.goBack()); 
+			  //Esto se suscribe a un observable que le llega desde updateHero
 		  }
 	  }
-
 }
