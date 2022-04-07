@@ -25,9 +25,7 @@ export class HeroesComponent implements OnInit {
 			}
 		)
 	}
-
-
-  
+	
 	//El primer parámetro de una función => es el valor de la suscripción, esto es, lo que tenga dentro el observable.
 
 	/*

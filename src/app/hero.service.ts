@@ -4,7 +4,7 @@ import { HEROES } from './mock-heroes';
 import { Observable, of, Subject } from 'rxjs';
 import { HeroesComponent } from './heroes/heroes.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, tap, filter } from 'rxjs/operators';
 import { MessageService } from './message.service';
 import { ResourcesService } from "./resources.service";
 import { splitAtColon } from '@angular/compiler/src/util';
@@ -52,7 +52,9 @@ export class HeroService {
 
 	
 	updateHero(hero: Hero): Observable<Hero[]> {
-		return this.heroeObservable;
+		return this.heroeObservable.pipe(
+			filter(h => h.includes(hero))
+		);
 	}
 
 	// updateHero(hero : Hero): Observable<any>{
