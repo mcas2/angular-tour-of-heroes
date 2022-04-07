@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Hero } from './hero';
 import { HEROES } from './mock-heroes';
-import { Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { HeroesComponent } from './heroes/heroes.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap, filter } from 'rxjs/operators';
@@ -18,7 +18,9 @@ export class HeroService {
 
 	private heroesUrl = 'api/heroes'; //Url to web api
 
-	private heroeSubject: Subject<Hero[]> = new Subject<Hero[]>();
+	private heroes = [];
+
+	private heroeSubject: BehaviorSubject<Hero[]> = new BehaviorSubject<Hero[]>(this.heroes);
 
 	public heroeObservable: Observable<Hero[]> = this.heroeSubject.asObservable();
 	//Inicializado -> existe, pero para ver sus datos necesitamos una/*  */ suscripción
@@ -33,7 +35,7 @@ export class HeroService {
 		private messageService: MessageService,
 		private resourcesService: ResourcesService,
 		) { }
-	
+
 	refreshList() {
 		this.resourcesService.getList().subscribe(
 			{
@@ -42,20 +44,51 @@ export class HeroService {
 		)
 	}
 
-	getHero(id: number): Observable<Hero> {
-		const url = `${this.heroesUrl}/${id}`;
-		return this.http.get<Hero>(url).pipe(
-			tap(_ => this.log(`fetched hero id=${id}`)),
-			catchError(this.handleError<Hero>(`getHero id=${id}`))
-		);
-	  }
-
-	
-	updateHero(hero: Hero): Observable<Hero[]> {
-		return this.heroeObservable.pipe(
-			filter(h => h.includes(hero))
-		);
+	updateList(heroes: Hero[]){
+		this.resourcesService.getList().subscribe(
+			{
+				next: heroArray => this.heroeSubject.next(heroes)
+			}
+		)
 	}
+
+	getHeroes(): Hero[]{
+		return this.heroeSubject.getValue();
+	}
+
+	updateHero(hero: Hero) {
+		const heroes = this.getHeroes();
+		heroes.forEach(element => {
+			if (element.id == hero.id){
+				element.name = hero.name;
+			}
+		});
+		this.updateList(heroes);
+		this.refreshList()
+	}
+
+	getHero(id: number): Hero {
+		const heroes = this.getHeroes();
+		let hero: Hero = {
+			id: 0,
+			name: ''
+		};
+		heroes.forEach(element => {
+			if (element.id == id){
+				hero = element;
+			}
+		});
+		return hero;
+	}
+
+	//getHero(id: number): Observable<Hero> {
+	//	const url = `${this.heroesUrl}/${id}`;
+	//	return this.http.get<Hero>(url).pipe(
+	//		tap(_ => this.log(`fetched hero id=${id}`)),
+	//		catchError(this.handleError<Hero>(`getHero id=${id}`))
+	//	);
+	//  }
+
 
 	// updateHero(hero : Hero): Observable<any>{
 	// 	return this.http.put(this.heroesUrl, hero, this.httpOptions).pipe(
@@ -91,6 +124,7 @@ export class HeroService {
 			catchError(this.handleError<Hero[]>('searchHeroes', []))
 		);
 	}
+
 
 	private handleError<T>(operation = 'operation', result? :T){
 		return (error:any) : Observable<T> => {

@@ -5,42 +5,41 @@ import { Location } from '@angular/common';
 import { HeroService } from '../hero.service';
 
 @Component({
-	selector: 'app-hero-detail',
-	templateUrl: './hero-detail.component.html',
-	styleUrls: ['./hero-detail.component.css']
+  selector: 'app-hero-detail',
+  templateUrl: './hero-detail.component.html',
+  styleUrls: ['./hero-detail.component.css'],
 })
-
 export class HeroDetailComponent implements OnInit {
+  @Input() hero?: Hero;
 
-	@Input() hero?: Hero;
+  constructor(
+    private route: ActivatedRoute,
+    private heroService: HeroService,
+    private location: Location
+  ) {}
 
-	constructor(
-		private route: ActivatedRoute,
-		private heroService: HeroService,
-		private location: Location
-	  ) {}
-	  
-	  ngOnInit(): void {
-		this.heroService.refreshList();
-		this.getHero();
-		this.heroService.heroeObservable.subscribe();
-	  }
-	  
-	  getHero(): void {
-		const id = Number(this.route.snapshot.paramMap.get('id'));
-		this.heroService.getHero(id)
-		  .subscribe(hero => this.hero = hero);
-	  }
+  ngOnInit(): void {
+	//Es este refresh necesario?
+    this.heroService.refreshList();
+    //
+	this.getHero();
+    this.heroService.heroeObservable.subscribe();
+  }
 
-	  goBack():void {
-		  this.location.back();
-	  }
+  getHero(): void {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.hero = this.heroService.getHero(id);
+	//.subscribe((hero) => (this.hero = hero)); (antigua subscripción a un observable)
+  }
 
-	  save(): void {
-		  if (this.hero){
-			  this.heroService.updateHero(this.hero)
-			  .subscribe(()=>this.goBack()); 
-			  //Esto se suscribe a un observable que le llega desde updateHero
-		  }
-	  }
+  goBack(): void {
+    this.location.back();
+  }
+
+  save(): void {
+    if (this.hero) {
+      this.heroService.updateHero(this.hero);
+	  this.goBack();
+    }
+  }
 }
