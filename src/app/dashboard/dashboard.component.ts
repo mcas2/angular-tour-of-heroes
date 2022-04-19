@@ -14,8 +14,7 @@ export class DashboardComponent implements OnInit {
   constructor(private heroService: HeroService) { }
 
   ngOnInit(): void {
-    this.heroService.refreshList();
-    this.heroService.heroeObservable.subscribe(
+    this.heroService.heroObservable.subscribe(
 			{
 				next: heroeArray => this.heroes = heroeArray.slice(1,5)
 			}

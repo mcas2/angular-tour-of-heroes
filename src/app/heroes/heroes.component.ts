@@ -12,14 +12,13 @@ import { MessageService } from '../message.service';
 export class HeroesComponent implements OnInit {
   heroes: Hero[] = [];
 
-  constructor(private heroService: HeroService) {}
+  constructor(private heroService: HeroService) {
+  }
 
   ngOnInit(): void {
-    //debería llamar a refreshList y suscribirse al observable
-    this.heroService.refreshList();
-    this.heroService.heroeObservable.subscribe({
-      next: (heroeArray) => (this.heroes = heroeArray),
-    });
+	  this.heroService.heroObservable.subscribe(
+		h => this.heroes = h
+	  );
   }
 
   add(name: string): void {
@@ -27,13 +26,11 @@ export class HeroesComponent implements OnInit {
     if (!name) {
       return;
     }
-    this.heroService.addHero({ name } as Hero).subscribe((hero) => {
-      this.heroes.push(hero);
-    });
+   this.heroService.addHero(name);
   }
 
   delete(hero: Hero): void {
     this.heroes = this.heroes.filter((h) => h !== hero);
-    this.heroService.deleteHero(hero.id).subscribe();
+    this.heroService.deleteHero(hero.id);
   }
 }

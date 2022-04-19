@@ -19,17 +19,13 @@ export class HeroDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-	//Es este refresh necesario?
-    this.heroService.refreshList();
-    //
 	this.getHero();
-    this.heroService.heroeObservable.subscribe();
+    this.heroService.heroObservable.subscribe();
   }
 
   getHero(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.hero = this.heroService.getHero(id);
-	//.subscribe((hero) => (this.hero = hero)); (antigua subscripción a un observable)
   }
 
   goBack(): void {

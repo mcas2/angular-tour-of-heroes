@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Hero } from './hero';
-import { HEROES } from './mock-heroes';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { HeroesComponent } from './heroes/heroes.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -20,11 +19,12 @@ export class HeroService {
 
 	private heroes = [];
 
-	private heroeSubject: BehaviorSubject<Hero[]> = new BehaviorSubject<Hero[]>(this.heroes);
+	private heroSubject: BehaviorSubject<Hero[]> = new BehaviorSubject<Hero[]>(this.heroes);
 
-	public heroeObservable: Observable<Hero[]> = this.heroeSubject.asObservable();
+	public heroObservable: Observable<Hero[]> = this.heroSubject.asObservable();
 	//Inicializado -> existe, pero para ver sus datos necesitamos una/*  */ suscripción
 
+	private cont = 0;
 
 	httpOptions = {
 		headers: new HttpHeaders({ 'Content type' : 'application/json' })
@@ -34,12 +34,15 @@ export class HeroService {
 		private http: HttpClient,
 		private messageService: MessageService,
 		private resourcesService: ResourcesService,
-		) { }
+		) { 
+			this.refreshList();
+
+		}
 
 	refreshList() {
 		this.resourcesService.getList().subscribe(
 			{
-				next: heroArray => this.heroeSubject.next(heroArray)
+				next: heroArray => this.heroSubject.next(heroArray)
 			}
 		)
 	}
@@ -47,13 +50,13 @@ export class HeroService {
 	updateList(heroes: Hero[]){
 		this.resourcesService.getList().subscribe(
 			{
-				next: heroArray => this.heroeSubject.next(heroes)
+				next: heroArray => this.heroSubject.next(heroes)
 			}
 		)
 	}
 
 	getHeroes(): Hero[]{
-		return this.heroeSubject.getValue();
+		return this.heroSubject.getValue();
 	}
 
 	updateHero(hero: Hero) {
@@ -64,7 +67,6 @@ export class HeroService {
 			}
 		});
 		this.updateList(heroes);
-		this.refreshList()
 	}
 
 	getHero(id: number): Hero {
@@ -81,36 +83,21 @@ export class HeroService {
 		return hero;
 	}
 
-	//getHero(id: number): Observable<Hero> {
-	//	const url = `${this.heroesUrl}/${id}`;
-	//	return this.http.get<Hero>(url).pipe(
-	//		tap(_ => this.log(`fetched hero id=${id}`)),
-	//		catchError(this.handleError<Hero>(`getHero id=${id}`))
-	//	);
-	//  }
-
-
-	// updateHero(hero : Hero): Observable<any>{
-	// 	return this.http.put(this.heroesUrl, hero, this.httpOptions).pipe(
-	// 		tap(_ => this.log(`updated hero id=${hero.id}`)),
-	// 		catchError(this.handleError<any>('updateHero'))
-	// 	);
-	// }
-
-	addHero(hero: Hero): Observable<Hero> {
-		return this.http.post<Hero>(this.heroesUrl, hero, this.httpOptions).pipe(
-			tap((newHero: Hero) => this.log(`added hero w/ id=${newHero.id}`)),
-			catchError(this.handleError<Hero>('addHero'))
-		);
+	addHero(heroName : string) {
+		const heroes = this.getHeroes();
+		const hero = {
+			id: this.cont+21,
+			name: heroName
+		};
+		heroes.push(hero);
+		this.cont += 1;
+		this.updateList(heroes);
 	}
 
-	deleteHero(id: number): Observable<Hero> {
-		const url = `${this.heroesUrl}/${id}`;
-
-		return this.http.delete<Hero>(url, this.httpOptions).pipe(
-			tap(_ => this.log(`delete hero id=${id}`)),
-			catchError(this.handleError<Hero>('deleteHero'))
-		);
+	deleteHero(id: number){
+		const oldHeroes = this.getHeroes();
+		const heroes = oldHeroes.filter(h => h.id !== id);
+		this.updateList(heroes);
 	}
 
 	searchHeroes(term: string): Observable<Hero[]>{
@@ -124,7 +111,6 @@ export class HeroService {
 			catchError(this.handleError<Hero[]>('searchHeroes', []))
 		);
 	}
-
 
 	private handleError<T>(operation = 'operation', result? :T){
 		return (error:any) : Observable<T> => {
@@ -142,5 +128,4 @@ export class HeroService {
 	private log (mesagge: string){
 		this.messageService.add(`HeroService: ${mesagge}`)
 	}
-
 }

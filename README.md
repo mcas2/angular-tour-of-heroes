@@ -1,3 +1,2 @@
 Heroes, lots of heroes!
-Tons of them.
-Another hero.
+Learning Angular, Typescript and RxJS through this tutorial.
