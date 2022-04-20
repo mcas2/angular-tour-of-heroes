@@ -17,12 +17,18 @@ export class HeroService {
 
 	private heroesUrl = 'api/heroes'; //Url to web api
 
-	private heroes = [];
+	private heroes: Hero[] = [];
+	/* La primera vez que te suscribes a un Subject no te da el valor, tiene que ser
+	un BehaviorSubject. 
+	 */
 
 	private heroSubject: BehaviorSubject<Hero[]> = new BehaviorSubject<Hero[]>(this.heroes);
-
 	public heroObservable: Observable<Hero[]> = this.heroSubject.asObservable();
-	//Inicializado -> existe, pero para ver sus datos necesitamos una/*  */ suscripción
+	//Inicializado -> existe, pero para ver sus datos necesitamos una suscripción
+
+	private specificHero: BehaviorSubject<Hero|undefined> = new BehaviorSubject<Hero|undefined>(undefined);
+	public specificHeroObservable: Observable<Hero|undefined> = this.specificHero.asObservable();
+  
 
 	private cont = 0;
 
@@ -36,9 +42,15 @@ export class HeroService {
 		private resourcesService: ResourcesService,
 		) { 
 			this.refreshList();
-
 		}
 
+	selectHero(selId: Number){
+		//let h: Hero = {id:0, name: ""};
+		const h = this.heroSubject.getValue().find(h => h.id == selId);
+		this.specificHero.next(h);
+		console.log(h?.name);
+	}
+	
 	refreshList() {
 		this.resourcesService.getList().subscribe(
 			{

@@ -11,7 +11,7 @@ import { MessageService } from './message.service';
 })
 export class ResourcesService {
   
-  private heroesUrl = 'api/heroes';
+  private heroesUrl = '5555/heroes';
 
   constructor(
 		private http: HttpClient,

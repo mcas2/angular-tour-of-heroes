@@ -22,6 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';  
 import { MatTabsModule } from '@angular/material/tabs'; 
 import { MatInputModule } from '@angular/material/input'; 
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -37,9 +38,11 @@ import { MatInputModule } from '@angular/material/input';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
+    //CARGARSE ESTO->
     HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, {
       dataEncapsulation: false,
     }),
+    //<- Hasta aquí
     BrowserAnimationsModule,
     MatSliderModule,
     FlexLayoutModule,
@@ -47,6 +50,7 @@ import { MatInputModule } from '@angular/material/input';
     MatIconModule,
     MatTabsModule,
     MatInputModule,
+    MatDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

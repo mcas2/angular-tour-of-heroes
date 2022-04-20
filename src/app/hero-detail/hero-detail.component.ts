@@ -1,46 +1,48 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, OnDestroy, Inject } from '@angular/core';
 import { Hero } from '../hero';
-import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { HeroService } from '../hero.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { HeroesComponent } from '../heroes/heroes.component';
 
 @Component({
   selector: 'app-hero-detail',
   templateUrl: './hero-detail.component.html',
   styleUrls: ['./hero-detail.component.css'],
+  changeDetection: ChangeDetectionStrategy.Default
 })
 
-export class HeroDetailComponent implements OnInit {
-  @Input() hero!: Hero;
-
-  private specificHero: BehaviorSubject<Hero> = new BehaviorSubject<Hero>(this.getHero());
-
-  private specificHeroObservable: Observable<Hero> = this.specificHero.asObservable();
+export class HeroDetailComponent implements OnInit, OnDestroy {
+  hero: Hero | undefined;
+  detailSubscription: Subscription | undefined;
 
   constructor(
     private heroService: HeroService,
-    private location: Location
-  ) { }
+    private location: Location,
+    public detailDialog: MatDialogRef<HeroesComponent>
+    ) { }
 
   ngOnInit(): void {
-    this.specificHeroObservable.subscribe(
-      h => this.hero = h
+    this.detailSubscription = this.heroService.specificHeroObservable.subscribe(
+         h => {
+          this.hero = h;
+        }
     );
   }
 
-  getHero(): Hero {
-    return this.heroService.getHero(this.specificHero.getValue().id);
+  ngOnDestroy(){
+    this.detailSubscription?.unsubscribe();
   }
 
   goBack(): void {
-    this.location.back();
+    this.detailDialog.close();
   }
 
   save(): void {
     if (this.hero) {
       this.heroService.updateHero(this.hero);
-      this.goBack();
+      this.detailDialog.close();
     }
   }
 }
