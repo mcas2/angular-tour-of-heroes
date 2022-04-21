@@ -12,7 +12,6 @@ import { DashboardComponent } from './dashboard/dashboard.component'; //Aquí es
 
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { InMemoryDataService } from './in-memory-data.service';
 import { HeroSearchComponent } from './hero-search/hero-search.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -23,6 +22,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs'; 
 import { MatInputModule } from '@angular/material/input'; 
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatCheckboxModule } from '@angular/material/checkbox'; 
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -38,11 +39,6 @@ import { MatDialogModule } from '@angular/material/dialog';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    //CARGARSE ESTO->
-    HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, {
-      dataEncapsulation: false,
-    }),
-    //<- Hasta aquí
     BrowserAnimationsModule,
     MatSliderModule,
     FlexLayoutModule,
@@ -51,6 +47,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatTabsModule,
     MatInputModule,
     MatDialogModule,
+    MatCheckboxModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent],

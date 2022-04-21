@@ -5,6 +5,8 @@ import { HeroService } from '../hero.service';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HeroesComponent } from '../heroes/heroes.component';
+import {MatCheckboxModule} from '@angular/material/checkbox'; 
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-hero-detail',
@@ -16,6 +18,8 @@ import { HeroesComponent } from '../heroes/heroes.component';
 export class HeroDetailComponent implements OnInit, OnDestroy {
   hero: Hero | undefined;
   detailSubscription: Subscription | undefined;
+
+  heroNameForm = new FormControl('');
 
   constructor(
     private heroService: HeroService,
@@ -41,6 +45,7 @@ export class HeroDetailComponent implements OnInit, OnDestroy {
 
   save(): void {
     if (this.hero) {
+      this.hero.name = this.heroNameForm.value;
       this.heroService.updateHero(this.hero);
       this.detailDialog.close();
     }

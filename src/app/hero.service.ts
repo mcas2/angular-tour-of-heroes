@@ -72,6 +72,9 @@ export class HeroService {
 	}
 
 	updateHero(hero: Hero) {
+		this.resourcesService.updateHero(hero).subscribe(); //mock
+		//Hasta que no te suscribes no 
+
 		const heroes = this.getHeroes();
 		heroes.forEach(element => {
 			if (element.id == hero.id){
@@ -85,7 +88,8 @@ export class HeroService {
 		const heroes = this.getHeroes();
 		let hero: Hero = {
 			id: 0,
-			name: ''
+			name: '',
+			powers: []
 		};
 		heroes.forEach(element => {
 			if (element.id == id){
@@ -99,11 +103,14 @@ export class HeroService {
 		const heroes = this.getHeroes();
 		const hero = {
 			id: this.cont+21,
-			name: heroName
+			name: heroName,
+			powers: []
 		};
 		heroes.push(hero);
 		this.cont += 1;
 		this.updateList(heroes);
+
+		this.resourcesService.addHero(hero);
 	}
 
 	deleteHero(id: number){
@@ -111,19 +118,7 @@ export class HeroService {
 		const heroes = oldHeroes.filter(h => h.id !== id);
 		this.updateList(heroes);
 	}
-
-	searchHeroes(term: string): Observable<Hero[]>{
-		if (!term.trim()){
-			return of([]); // Lo que quiere decir que si no existe el término, devuelve un array vacío
-		}
-		return this.http.get<Hero[]>(`${this.heroesUrl}/?name=${term}`).pipe(
-			tap(x => x.length ?	
-				this.log(`found heroes matching "${term}`) :
-				this.log(`no heroes matching ${term}`)),
-			catchError(this.handleError<Hero[]>('searchHeroes', []))
-		);
-	}
-
+	
 	private handleError<T>(operation = 'operation', result? :T){
 		return (error:any) : Observable<T> => {
 			   // TODO: send the error to remote logging infrastructure

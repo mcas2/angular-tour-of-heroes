@@ -1,19 +1,30 @@
 <div *ngIf="hero">
-
-	<h3>{{hero.name | uppercase}} DETAILS</h3>
-	<div class="hero-id"> <span>Id: </span> {{hero.id}}</div>
-	<div>
-		<mat-form-field class="change-mat-form" appearance="fill">
-		  <mat-label for="hero-name">Change your hero name!</mat-label>
-		  <input matInput placeholder="Super... something."id="hero-name" [(ngModel)]="hero.name"/>
-		</mat-form-field>
-	</div>
-	<div class="detail-buttons">
-		<button mat-mini-fab color="accent" type="button" (click)="save()">
-			<mat-icon>save</mat-icon>
-		</button>
-		<button mat-mini-fab color="warn" type="button" (click)="goBack()">
-			<mat-icon>restore_page</mat-icon>
-		</button>
-	</div>
+  <h3>{{ hero.name | uppercase }} DETAILS</h3>
+  <div class="hero-id"><span>Id: </span> {{ hero.id }}</div>
+  <div>
+    <form>
+      <mat-form-field class="change-mat-form" appearance="fill">
+        <mat-label for="hero-name">Change your hero name!</mat-label>
+        <input
+          matInput
+          placeholder="Super... something."
+          id="hero-name"
+          [formControl]="heroNameForm"
+        />
+        <section class="powers-checkgroup">
+          <mat-checkbox class="powers-checkbox">Velocidad</mat-checkbox><br />
+          <mat-checkbox class="powers-checkbox">Fuerza</mat-checkbox><br />
+          <mat-checkbox class="powers-checkbox">Elasticidad</mat-checkbox><br />
+        </section>
+      </mat-form-field>
+      <div class="detail-buttons">
+        <button mat-mini-fab color="accent" type="button" (click)="save()">
+          <mat-icon>save</mat-icon>
+        </button>
+        <button mat-mini-fab color="warn" type="button" (click)="goBack()">
+          <mat-icon>restore_page</mat-icon>
+        </button>
+      </div>
+    </form>
   </div>
+</div>
