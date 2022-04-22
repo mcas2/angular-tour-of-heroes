@@ -11,11 +11,13 @@
           id="hero-name"
           [formControl]="heroNameForm"
         />
-        <section class="powers-checkgroup">
-          <mat-checkbox class="powers-checkbox">Velocidad</mat-checkbox><br />
-          <mat-checkbox class="powers-checkbox">Fuerza</mat-checkbox><br />
-          <mat-checkbox class="powers-checkbox">Elasticidad</mat-checkbox><br />
-        </section>
+        <section [formGroup]="form" class="powers-checkgroup">
+          <!--Seguramente se pudiera hacer con un for-->
+          <mat-checkbox class="powers-checkbox" formControlName="force">Force</mat-checkbox><br />
+          <mat-checkbox class="powers-checkbox" formControlName="elasticity">Elasticity</mat-checkbox><br />
+          <mat-checkbox class="powers-checkbox" formControlName="invisibility">Invisibility</mat-checkbox><br />
+                </section>
+
       </mat-form-field>
       <div class="detail-buttons">
         <button mat-mini-fab color="accent" type="button" (click)="save()">

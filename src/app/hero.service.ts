@@ -45,10 +45,8 @@ export class HeroService {
 		}
 
 	selectHero(selId: Number){
-		//let h: Hero = {id:0, name: ""};
 		const h = this.heroSubject.getValue().find(h => h.id == selId);
 		this.specificHero.next(h);
-		console.log(h?.name);
 	}
 	
 	refreshList() {
@@ -79,6 +77,7 @@ export class HeroService {
 		heroes.forEach(element => {
 			if (element.id == hero.id){
 				element.name = hero.name;
+				element.powers = hero.powers;
 			}
 		});
 		this.updateList(heroes);
@@ -89,7 +88,7 @@ export class HeroService {
 		let hero: Hero = {
 			id: 0,
 			name: '',
-			powers: []
+			powers: [],
 		};
 		heroes.forEach(element => {
 			if (element.id == id){
@@ -104,7 +103,7 @@ export class HeroService {
 		const hero = {
 			id: this.cont+21,
 			name: heroName,
-			powers: []
+			powers: [], 
 		};
 		heroes.push(hero);
 		this.cont += 1;

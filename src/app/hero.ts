@@ -3,3 +3,7 @@ export interface Hero {
 	name: string;
 	powers: string[];
 }
+
+export enum Powers{
+	force, elasticity, invisibility
+}
