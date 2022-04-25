@@ -105,10 +105,11 @@ export class HeroService {
 			name: heroName,
 			powers: [], 
 		};
-		heroes.push(hero);
+		heroes.push(hero); 
 		this.cont += 1;
 		this.updateList(heroes);
 
+		//Esta llamada es falsa, el http no tiene tráfico real
 		this.resourcesService.addHero(hero);
 	}
 
