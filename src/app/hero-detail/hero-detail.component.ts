@@ -8,12 +8,27 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HeroesComponent } from '../heroes/heroes.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-hero-detail',
   templateUrl: './hero-detail.component.html',
   styleUrls: ['./hero-detail.component.css'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.Default,
+  animations:[
+    trigger('nameChanged', [
+      state('none', style({
+        color: ""
+      })),
+      state('changes', style({
+        background: "#B00020",
+        color: "white"
+      })),
+      transition('none <=> changes' , [
+        animate('0.5s')
+      ]),
+    ])
+  ]
 })
 
 export class HeroDetailComponent implements OnInit, OnDestroy {
@@ -21,19 +36,24 @@ export class HeroDetailComponent implements OnInit, OnDestroy {
   detailSubscription: Subscription | undefined;
   fb: FormBuilder = new FormBuilder;
   form!: FormGroup;
-  activatedPowers: string[]| undefined = [];
+  activatedPowers: string[] | undefined = [];
 
   heroNameForm = new FormControl('');
+
+  //animation
+  notWritten: boolean = true;
 
   constructor(
     private heroService: HeroService,
     private location: Location,
     public detailDialog: MatDialogRef<HeroesComponent>
-  ) {
+   ) {
   }
 
 
   ngOnInit(): void {
+    console.log(this.heroNameForm.value);
+
     this.detailSubscription = this.heroService.specificHeroObservable.subscribe(
       h => {
         this.hero = h;
@@ -41,6 +61,14 @@ export class HeroDetailComponent implements OnInit, OnDestroy {
         this.form = this.initForm();
       }
     );
+  }
+
+  nameChanges() {
+    if (this.heroNameForm.value == ''){
+      this.notWritten = true;
+    } else {
+      this.notWritten = false;
+    }
   }
 
   initForm(): FormGroup {

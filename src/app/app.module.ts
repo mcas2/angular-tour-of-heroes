@@ -24,6 +24,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox'; 
 import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -35,11 +36,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     HeroSearchComponent
     ],
   imports: [
-    BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    BrowserAnimationsModule,
     MatSliderModule,
     FlexLayoutModule,
     MatButtonModule,
@@ -48,7 +47,21 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatInputModule,
     MatDialogModule,
     MatCheckboxModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    RouterModule.forRoot([
+      {
+        path: 'heroes',
+        component: HeroesComponent,
+        data: {animation: 'slideHeroes'}
+      },
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+        data: {animation: 'slideDashboard'}
+      }
+    ])
   ],
   providers: [],
   bootstrap: [AppComponent],

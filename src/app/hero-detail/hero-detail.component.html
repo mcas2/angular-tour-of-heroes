@@ -6,6 +6,7 @@
       <mat-form-field class="change-mat-form" appearance="fill">
         <mat-label for="hero-name">Change your hero name!</mat-label>
         <input
+          (keyup)="nameChanges()"
           matInput
           placeholder="Super... something."
           id="hero-name"
@@ -16,14 +17,14 @@
           <mat-checkbox class="powers-checkbox" formControlName="force">Force</mat-checkbox><br />
           <mat-checkbox class="powers-checkbox" formControlName="elasticity">Elasticity</mat-checkbox><br />
           <mat-checkbox class="powers-checkbox" formControlName="invisibility">Invisibility</mat-checkbox><br />
-                </section>
+        </section>
 
       </mat-form-field>
       <div class="detail-buttons">
         <button mat-mini-fab color="accent" type="button" (click)="save()">
           <mat-icon>save</mat-icon>
         </button>
-        <button mat-mini-fab color="warn" type="button" (click)="goBack()">
+        <button mat-mini-fab type="button" [@nameChanged]="notWritten ? 'none':'changes'" (click)="goBack()">
           <mat-icon>restore_page</mat-icon>
         </button>
       </div>
